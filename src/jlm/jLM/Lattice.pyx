@@ -28,16 +28,16 @@ ctypedef fused plattice_type:
 # Define void latticeHistogram3 function #
 cdef void latticeHistogram3(int[:,:,:] target, unsigned char[:,:,:,:] src, int[:] idxs) nogil:
     """
-    This function edits the input named "target" by incrementing its particle counts by 1 if 
+    This function edits the input named "target" by incrementing its particle count by 1 if 
     specific conditions are met (???).
 
     Args:
         target (int[:,:,:]):
-            A 3D array (py:class:`numpy.ndarray`) that 
+            A 3D array (py:class:`numpy.ndarray`) that usually specifies the (???)
         src (char[:,:,:,:]):
-            A 4D array where each index of the array is a character (???).
+            A 4D array (py:class:`numpy.ndarray`) that usually specifies the (???).
         indx (int[:]):
-            A 1D array where the index is an integer (i.e., [5]).
+            A 1D array (py:class:`numpy.ndarray`) that usually specifies the (???).
 
     Returns:
         none
@@ -47,10 +47,15 @@ cdef void latticeHistogram3(int[:,:,:] target, unsigned char[:,:,:,:] src, int[:
     # Define all of the following variables as integers #
     cdef int nx,ny,nz,np,ni,x,y,z,p,i
     # Populate newly defined variables with arguments from function input #
+    # Dimensionality of nx #
     nx = src.shape[0]
+    # Dimensionality of ny #
     ny = src.shape[1]
+    # Dimensionality of nz #
     nz = src.shape[2]
+    # Dimensionality of np #
     np = src.shape[3]
+    # Dimensionality of ni #
     ni = idxs.shape[0]
 
     # Iterate through all values from 1 to nx #
@@ -63,31 +68,75 @@ cdef void latticeHistogram3(int[:,:,:] target, unsigned char[:,:,:,:] src, int[:
                 for p in range(np):
                     # Iterate through all values from 1 to ni #
                     for i in range(ni):
-                        # Test whether 
+                        # Test whether the specific lattice site x,y,z for particle p #
+                        # is equal to the value of idxs at entry i #
                         if src[x,y,z,p] == idxs[i]:
+                            # Increment the value of the target array by 1 #
                             target[x,y,z] += 1
+                            # End the function #
                             break
 
 cdef void latticeHistogram2(int[:,:] target, unsigned char[:,:,:,:] src, int[:] idxs, int intDim) nogil:
+    """
+    This function edits the input named "target" by incrementing its particle count by 1 if 
+    specific conditions are met (???).
+
+    Args:
+        target (int[:,:]):
+            A 2D array (py:class:`numpy.ndarray`) that usually specifies the (???)
+        src (char[:,:,:,:]):
+            A 4D array (py:class:`numpy.ndarray`) that usually specifies the (???).
+        indx (int[:]):
+            A 1D array (py:class:`numpy.ndarray`) that usually specifies the (???).
+        intDim (integer):
+            Either a 0, 1, or 2 which signifies the dimension that (???).
+
+    Returns:
+        none
+    
+    """
+    
+    # Define all of the following variables as integers #
+    # Do we need nu, and nv? #
     cdef int nu,nv,nx,ny,nz,np,ni,x,y,z,p,i
+    # Dimensionality of nx #
     nx = src.shape[0]
+    # Dimensionality of ny #
     ny = src.shape[1]
+    # Dimensionality of nz #
     nz = src.shape[2]
+    # Dimensionality of np #
     np = src.shape[3]
+    # Dimensionality of ni #
     ni = idxs.shape[0]
 
+    # Iterate through all values from 1 to nx #
     for x in range(nx):
+        # Iterate through all values from 1 to ny #
         for y in range(ny):
+            # Iterate through all values from 1 to nz #
             for z in range(nz):
+                # Iterate through all values from 1 to np #
                 for p in range(np):
+                    # Iterate through all values from 1 to ni #
                     for i in range(ni):
+                        # Test whether the specific lattice site x,y,z for particle p #
+                        # is equal to the value of idxs at entry i #
                         if src[x,y,z,p] == idxs[i]:
+                            # Test whether intDim input argument equals 0 #
                             if intDim == 0:
+                                # Increment target at y,z dimension by 1 #
                                 target[y,z] += 1
+                            # Test whether intDim input argument equals 1 #
                             elif intDim == 1:
+                                # Increment target at z,x dimension by 1 #
+                                # Should this be x,z (???) #
                                 target[z,x] += 1
+                            # Test whether intDim input argument doesn't equal 0 or 1 #
                             else:
+                                # Increment target at x,y dimension by 1 #
                                 target[x,y] += 1
+                            # End the function #
                             break
 
 cdef void latticeHistogram1(int[:] target, unsigned char[:,:,:,:] src, int[:] idxs, int keepDim) nogil:
