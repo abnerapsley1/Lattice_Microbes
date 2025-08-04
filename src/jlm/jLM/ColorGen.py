@@ -39,6 +39,15 @@
 # adapted from http://stackoverflow.com/a/13781114
 #
 
+"""
+This module simply returns an object to the working environment named ColorSeq.
+
+The object ColorSeq is an object of a user-defined class called ColorGen (see below).
+This object contains various attributes and methods designed to help generate unique
+colors for simulation visualizations and visual presentations of simulation data.
+
+"""
+
 ##############################################
 ### Importing Additional Necessary Modules ###
 ##############################################
@@ -46,34 +55,69 @@ import colorsys
 import itertools
 import fractions
 
+
+### Define Internal _coverRange Function ###
+def _coverRange():
+    # Stop function here after first time it is called and return 0 #
+    yield 0
+    # Iterate through an infinite list of integers, stopping after each one #
+    for n in itertools.count():
+        # Define k as 1 / (2 ^ the iteration number) #
+        k = fractions.Fraction(1, 2**n)
+        # Define i as the denominator from k #
+        i = k.denominator # [1,2,4,8,16,...]
+        # Iterate from 1 to i by 2s #
+        for j in range(1,i,2):
+            # Stop the function and return j divided by i #
+            yield fractions.Fraction(j,i)
+
+
+### Define Internal _hsvGen Function ###
+def _hsvGen(h):
+    # Set s equal to 6/10 #
+    for s in [fractions.Fraction(6,10)]: # optionally use range
+        # Iterate through v from 8/10 to 5/10 #
+        for v in [fractions.Fraction(8,10),fractions.Fraction(5,10)]: # could use range too
+            # Stop function and return the list (h, s, v) #
+            yield (h, s, v) # use bias for v here if you use range
+
 ###################################
 ### Define _coverRange Function ###
 ###################################
-def _coverRange():
-    # 
-    yield 0
-    for n in itertools.count():
-        k = fractions.Fraction(1, 2**n)
-        i = k.denominator # [1,2,4,8,16,...]
-        for j in range(1,i,2):
-            yield fractions.Fraction(j,i)
-
-def _hsvGen(h):
-    for s in [fractions.Fraction(6,10)]: # optionally use range
-        for v in [fractions.Fraction(8,10),fractions.Fraction(5,10)]: # could use range too
-            yield (h, s, v) # use bias for v here if you use range
-
-
-
-
 class ColorGen:
-    """Distinct color generator"""
+    """
+    Distinct color generator class.
+
+    This class contains various attributes and methods designed to help generate unique
+    colors for simulation visualizations and visual presentations of simulation data.
+
+    Initialization Parameters (Example):
+        myObject = jLM.ColorGen.ColorGen(hue = 0.5):
+            hue (float): The initial hue of the color pallate.
+
+    Attributes:  
+        _hue (float): The initial hue of the color pallate.
+        _genHSV():
+        _fgHex ():
+        _bgHex ():
+        _fgFloat ():
+        _bgFloat ():
+        
+    Methods:
+
+    
+        
+    """
     def __init__(self,hue=0.5):
-        """Distinct color generator
+        """
+        Initiator method for the class.
 
         Args:
-           hue (float):  Initial hue
+           hue (float):  Initial hue ???
+           
         """
+
+        # Define attribute _hue as hue input argument #
         self._hue = hue
         self._genHSV = itertools.chain.from_iterable(map(_hsvGen,_coverRange()))
         self._fgHex = ["#000000"]
