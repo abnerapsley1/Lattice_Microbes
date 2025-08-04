@@ -96,10 +96,10 @@ def setLMLoggerLevel(level):
 
 
 
-
+### Define setLMLogFile Function ###
 def setLMLogFile(filename, level=logging.DEBUG):
         """
-        Set the file name for logging the information
+        Set the file name for the logger to use.
 
         This function enables the user to set the logger file which will
 	specify the file name where all logging information is printed/saved.
@@ -116,11 +116,16 @@ def setLMLogFile(filename, level=logging.DEBUG):
 
         """
 
-	
+	# Define fileH as a FileHandler class with the name of the file taken #
+	# from the function input and the mode being set to "write". #
 	fileH = logging.FileHandler(filename, mode='w')
+	# Set the level of message for fileH to the input argument for level #
 	fileH.setLevel(level)
+	# Set the fileH formatter to the previously created LMFormatter #
 	fileH.setFormatter(LMformatter)
+	# Remove the null handler for the original LMLogger object #
 	LMLogger.removeHandler(nullHandlerLM)
+	# Add the fileH handler to the original LMLogger object #
 	LMLogger.addHandler(fileH)
 
 
@@ -128,15 +133,28 @@ def setLMLogFile(filename, level=logging.DEBUG):
 
 
 def setLMLogConsole(level=logging.DEBUG):
-	"""Set the logger to write to the console as the code is working
+	"""
+        Set the handler of the logger to be the standard output.
 
-    Args:
-        level:
-            The level of information to log
-    """
-	consoleH = logging.StreamHandler() # Defaults to sys.stderr
+        Args:
+	    level (string): The level for the logger to set the messages at. This needs
+                to be in the following format "logging.LEVEL", where LEVEL can be DEBUG,
+		INFO, WARNING, ERROR, CRITICAL, etc.
+
+        Returns:
+            none
+
+        """
+
+	# Define consoleH as a StreamHandler class from the logging module #
+	# This will instead of writing loging to file, to the standard output #
+	consoleH = logging.StreamHandler()
+	# Set the level of message for the output stream logging #
 	consoleH.setLevel(level)
+	# Set the format for the output stream logging #
 	consoleH.setFormatter(LMformatter)
+	# Remove null handler from original LMLogger object #
 	LMLogger.removeHandler(nullHandlerLM)
+	# add consoleH handler to original LMLogger object #
 	LMLogger.addHandler(consoleH)
 
