@@ -4,6 +4,9 @@
     
 """Cythonized lattice manipulation functions"""
 
+##############################################
+### Importing Additional Necessary Modules ###
+##############################################
 import numpy as npy
 cimport numpy as cnpy
 from libc.stdlib cimport *
@@ -11,23 +14,56 @@ from posix.stdlib cimport *
 from libc.time cimport *
 from libc.stdint cimport *
 
+# Create new type alias called plattice_type #
+# This new alias is of the "fused" data type which means that an object #
+# of the plattice_type can be any of the types below. Now we do not #
+# have to write a new function for each of these types, but simply one #
+# function with the plattice_type used. #
 ctypedef fused plattice_type:
+    # Standard 8-bit integer #
     uint8_t
+    # Standard 32-bit integer #
     uint32_t
 
+# Define void latticeHistogram3 function #
 cdef void latticeHistogram3(int[:,:,:] target, unsigned char[:,:,:,:] src, int[:] idxs) nogil:
+    """
+    This function edits the input named "target" by incrementing its particle counts by 1 if 
+    specific conditions are met (???).
+
+    Args:
+        target (int[:,:,:]):
+            A 3D array (py:class:`numpy.ndarray`) that 
+        src (char[:,:,:,:]):
+            A 4D array where each index of the array is a character (???).
+        indx (int[:]):
+            A 1D array where the index is an integer (i.e., [5]).
+
+    Returns:
+        none
+    
+    """
+
+    # Define all of the following variables as integers #
     cdef int nx,ny,nz,np,ni,x,y,z,p,i
+    # Populate newly defined variables with arguments from function input #
     nx = src.shape[0]
     ny = src.shape[1]
     nz = src.shape[2]
     np = src.shape[3]
     ni = idxs.shape[0]
 
+    # Iterate through all values from 1 to nx #
     for x in range(nx):
+        # Iterate through all values from 1 to ny #
         for y in range(ny):
+            # Iterate through all values from 1 to nz #
             for z in range(nz):
+                # Iterate through all values from 1 to np #
                 for p in range(np):
+                    # Iterate through all values from 1 to ni #
                     for i in range(ni):
+                        # Test whether 
                         if src[x,y,z,p] == idxs[i]:
                             target[x,y,z] += 1
                             break
