@@ -14,7 +14,8 @@ from posix.stdlib cimport *
 from libc.time cimport *
 from libc.stdint cimport *
 
-# Create new type alias called plattice_type #
+
+### Create New Type Alias Called plattice_type ###
 # This new alias is of the "fused" data type which means that an object #
 # of the plattice_type can be any of the types below. Now we do not #
 # have to write a new function for each of these types, but simply one #
@@ -25,7 +26,7 @@ ctypedef fused plattice_type:
     # Standard 32-bit integer #
     uint32_t
 
-# Define void latticeHistogram3 function #
+### Define Void latticeHistogram3 Function ###
 cdef void latticeHistogram3(int[:,:,:] target, unsigned char[:,:,:,:] src, int[:] idxs) nogil:
     """
     This function edits the input named "target" by incrementing its particle count by 1 if 
@@ -76,6 +77,8 @@ cdef void latticeHistogram3(int[:,:,:] target, unsigned char[:,:,:,:] src, int[:
                             # End the function #
                             break
 
+
+### Define Void latticeHistogram2 Function ###
 cdef void latticeHistogram2(int[:,:] target, unsigned char[:,:,:,:] src, int[:] idxs, int intDim) nogil:
     """
     This function edits the input named "target" by incrementing its particle count by 1 if 
@@ -139,28 +142,73 @@ cdef void latticeHistogram2(int[:,:] target, unsigned char[:,:,:,:] src, int[:] 
                             # End the function #
                             break
 
+
+### Define Void latticeHistogram1 Function ###
 cdef void latticeHistogram1(int[:] target, unsigned char[:,:,:,:] src, int[:] idxs, int keepDim) nogil:
+    """
+    This function edits the input named "target" by incrementing its particle count by 1 if 
+    specific conditions are met (???).
+
+    Args:
+        target (int[:,:]):
+            A 1D array (py:class:`numpy.ndarray`) that usually specifies the (???)
+        src (char[:,:,:,:]):
+            A 4D array (py:class:`numpy.ndarray`) that usually specifies the (???).
+        indx (int[:]):
+            A 1D array (py:class:`numpy.ndarray`) that usually specifies the (???).
+        keepDim (integer):
+            Either a 0 (x), 1 (y), or 2 (z) which signifies the dimension that 
+            is incremented.
+
+    Returns:
+        none
+    
+    """
+
+    # Define all of the following variables as integers #
+    # Do we need nu, and nv? #
     cdef int nu,nv,nx,ny,nz,np,ni,x,y,z,p,i
+    # Dimensionality of nx #
     nx = src.shape[0]
+    # Dimensionality of ny #
     ny = src.shape[1]
+    # Dimensionality of nz #
     nz = src.shape[2]
+    # Dimensionality of np #
     np = src.shape[3]
+    # Dimensionality of ni #
     ni = idxs.shape[0]
 
+    # Iterate through all values from 1 to nx #
     for x in range(nx):
+        # Iterate through all values from 1 to ny #
         for y in range(ny):
+            # Iterate through all values from 1 to nz #
             for z in range(nz):
+                # Iterate through all values from 1 to np #
                 for p in range(np):
+                    # Iterate through all values from 1 to ni #
                     for i in range(ni):
+                        # Test whether the specific lattice site x,y,z for particle p #
+                        # is equal to the value of idxs at entry i #
                         if src[x,y,z,p] == idxs[i]:
+                            # Test if keepDim is 0 #
                             if keepDim == 0:
+                                # Increment target at x index by 1 #
                                 target[x] += 1
+                            # Test if keepDim is 1 #
                             elif keepDim == 1:
+                                # Increment target at y index by 1 #
                                 target[y] += 1
+                            # Test if keepDim is not 0 or 1 #
                             else:
+                                # Increment target at z index by 1 #
                                 target[z] += 1
+                            # End the function #
                             break
 
+
+### Define latticeHistogram Function ###
 def latticeHistogram(unsigned char[:,:,:,:] src, int[:] idxs, axes=None, target=None):
     """Compute histogram of particle types.
 
