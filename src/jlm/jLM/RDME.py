@@ -58,6 +58,8 @@ def _copyDoc(method):
         return func
     return _doc
 
+
+
 class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
     """Base RDME model """
     @property
@@ -124,6 +126,8 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
 
         self.resizeLattice(dimensions, latticeSpacing, latticeType=latticeType)
 
+
+
     def resizeLattice(self, dimensions, latticeSpacing, latticeType=None):
         import lm
         """Resize lattice
@@ -153,6 +157,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         self.particleLattice = self.lattice.getParticleLatticeView()      #: :py:class:`~numpy.ndarray`: NumPy view of particle lattice
         self.maxConcentration = self.pps/self.siteNAV                     #: float: Concentration of a fully packed lattice
 
+
+
+
+
     def placeNumber(self, sp, x, y, z, n):
         """Place a number of particles at a specific subvolume
 
@@ -172,6 +180,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         for _ in range(n):
             self._particlePlacement.append(( z, y, x, sp.idx))
 
+
+
+
+
     def distributeNumber(self, sp, reg, count):
         """Distribute a number of particles uniformly through a region
 
@@ -189,6 +201,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         cs.append((reg.idx, sp.idx, count))
         self._particleDistCount = cs
 
+
+
+
+
     def distributeConcentration(self, sp, reg, conc):
         """Distribute a concentration of particles uniformly through a region
 
@@ -204,7 +220,11 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         cs = [x for x in cs if not (x[0]==reg.idx and x[1]==sp.idx)]
         cs.append((reg.idx, sp.idx, conc))
         self._particleDistConc = cs
+
+
         
+
+
 
     def transitionRate(self, sp, rFrom, rTo, rate, value=None):
         """Define the diffusive transition rate between regions
@@ -239,6 +259,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
                 raise TypeError("rate")
         self._transitionRates.append( (_idxOrNone(sp), _idxOrNone(rFrom), _idxOrNone(rTo), rate.idx) )
 
+
+
+
+
     def assignReaction(self, reaction, region):
         """Assign a reaction to a region
 
@@ -251,6 +275,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         e = (reaction.idx, region.idx)
         if e not in self._reactionLocations:
             self._reactionLocations.append( (reaction.idx, region.idx) )
+
+
+
+
 
     def species(self, name, **kwargs):
         """Lookup/create species instance
@@ -269,6 +297,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         """
         return self.speciesList.get(name, **kwargs)
 
+
+
+
+
     def region(self, name, **kwargs):
         """Lookup/create region instance
 
@@ -285,6 +317,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
                Region instance
         """
         return self.regionList.get(name, **kwargs)
+
+
+
+
 
     def reaction(self, reactants, products, rate, value=None, regions=None, **kwargs):
         r"""Lookup/create reaction instance
@@ -334,6 +370,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         return rxn
 
 
+
+
+
+
     def rateConst(self, rate, value, order, **kwargs):
         """Lookup/create reaction rate constant instance
 
@@ -355,6 +395,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         """
         return self.rxnRateList.get(rate, value, order, **kwargs)
 
+
+
+
+
     def diffusionConst(self, rate, value, **kwargs):
         """Lookup/create diffusion constant instance
 
@@ -374,6 +418,8 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         """
         return self.diffRateList.get(rate, value, **kwargs)
 
+
+
     @property
     def diffusionZero(self):
         """Lookup/create a zero-valued diffusion constant instance
@@ -383,6 +429,8 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
                 DiffusionConst instance
         """
         return self.diffRateList.get('0', 0.0, texRepr=r'D_\varnothing')
+
+
 
     def maxDiffusionRate(self, latticeSpacing=None, dt=None):
         """Compute max allowed diffusion constant for the simulation 
@@ -404,6 +452,8 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         
         return self.latticeSpacing**2/6/dt
 
+
+
     @property
     def diffusionFast(self):
         """Lookup/create a maximum-valued diffusion constant instance
@@ -413,6 +463,8 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
                 DiffusionConst instance
         """
         return self.diffRateList.get("fast", self.maxDiffusionRate(), texRepr=r'D_\infty')
+
+
 
     def setMaximumTimestep(self):
         """Set the simulation timestep using the fastest diffusion rate"""
@@ -424,6 +476,10 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
             raise RuntimeError("Define diffusion constants prior to calling")
         else:
             return (self.latticeSpacing)**2 / (6*v)
+
+
+
+
 
     def run(self, solver=None, replicate=1, seed=None, cudaDevices=None, checkpointInterval=0):
         """Run the RDME simulation
@@ -455,12 +511,21 @@ class SpatialModel(AN.LatticeAnalysisMixin, JD.JupyterDisplayMixin):
         return File(self.filename, latticeType=self.latticeType)
 
 
+
+
+
+
+
 class Sim(LM.LmWriteMixin, SpatialModel):
     """Define and run an RDME simulation"""
+
+
     @_copyDoc(AN.LatticeAnalysisMixin.particleStatistics)
     def particleStatistics(self, particleLattice=None, siteLattice=None):
         self._placeAllParticles()
         return super().particleStatistics(particleLattice,siteLattice)
+
+
 
     def __init__(self, name, filename, dimensions, latticeSpacing, regionName, latticeType=None, dt=None):
         """Create new RDME object
@@ -502,6 +567,10 @@ class Sim(LM.LmWriteMixin, SpatialModel):
         self.region(regionName)
         if dt is not None:
             self.timestep = dt
+
+
+
+
 
 
 class File(AN.TrajAnalysisMixin, JD.FileJupyterMixin, LM.LmReadMixin, SpatialModel):

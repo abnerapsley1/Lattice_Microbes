@@ -49,6 +49,8 @@ def _goodName(s):
             not any(x.isspace() for x in s) and # no whitespace
             ',' not in s)                       # comma used as a delimiter in HDF5
 
+
+
 class Namespace:
     """Convienence class for TAB completing simulation objects"""
     def __init__(self, sos):
@@ -79,11 +81,21 @@ class Namespace:
                                       objs=[dict(id=o.idx, html=o._repr_html_(), annotation=o.annotation, tex=o._texstr) 
                                                for o in self._simobj]))
 
+
+
+
+
 class SimObjs:
     """Container to manage simulation data types"""
+
+
     def getAutoNamespace(self):
         """Get :py:class:`~jLM.BaseTypes.Namespace` object."""
         return Namespace(self)
+
+
+
+
 
     def matchRegex(self, regex):
         """Generator returning matches to regular expression
@@ -100,6 +112,8 @@ class SimObjs:
         for v in sorted(self._obj.values(), key=lambda x: -x.idx):
             if re.match(regex, v.name):
                 yield v
+
+
 
     def __getitem__(self, what):
         """Get object by name or idx integer"""
@@ -123,13 +137,23 @@ class SimObjs:
         self._id2obj = dict()
         self._frozen = False
 
+
+
     def freeze(self):
         """Do not create new objects from failed lookups"""
         self._frozen = True
 
+
+
+
+
     def unfreeze(self):
         """Create new objects from failed lookups"""
         self._frozen = False
+
+
+
+
 
     def is_defined(self, *args, **kwargs):
         """Check if `get` would create a new object
@@ -147,6 +171,10 @@ class SimObjs:
         """
         name = self._cls._unique_id(*args, **kwargs)
         return name in self._obj
+
+
+
+
 
     def get(self, *args, **kwargs):
         """Return a simulation object, create it if it does not exist
@@ -177,6 +205,11 @@ class SimObjs:
                 return obj
             else:
                 raise
+
+
+
+
+
 
 
 
@@ -228,4 +261,3 @@ class SimObj(metaclass=ABCMeta):
             return self._html()
         except AttributeError:
             return "$$"+self._TeXMath()+"$$"
-

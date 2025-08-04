@@ -44,6 +44,8 @@ from . import RDME
 from . import Lattice
 from . import Types as T
 
+
+
 def makeSolver(rdmeSolver, customSolver):
     """Create custom solver
 
@@ -69,6 +71,10 @@ def makeSolver(rdmeSolver, customSolver):
     name = customSolver.__name__ + "_" + rdmeSolver.__name__
     return type(name, (customSolver, rdmeSolver), {})
 
+
+
+
+
 class ConstBoundaryConc:
     """Solver with fixed concentration boundary conditions
 
@@ -86,6 +92,8 @@ class ConstBoundaryConc:
         self.distTable = None
         self.bMask = np.zeros_like(self.rdme.siteLattice)
         self.bLattice = np.zeros_like(self.rdme.siteLattice)
+
+
 
     def setBoundary(self, species, concs, boundary):
         r"""Specify boundary conditions
@@ -132,6 +140,10 @@ class ConstBoundaryConc:
         self.bLattice[boundary>0] = len(self.dists)
         self.dists.append(dist)
 
+
+
+
+
     def hookSimulation(self, t, lattice):
         """Replaces all particles on boundary according to B.C.s"""
         if self.distTable is None:
@@ -139,3 +151,4 @@ class ConstBoundaryConc:
         particles = lattice.getParticleLatticeView()
         Lattice.populateLattice(particles, self.bLattice,  self.distTable, mask=self.bMask, exact=self.exact)
         return 1
+

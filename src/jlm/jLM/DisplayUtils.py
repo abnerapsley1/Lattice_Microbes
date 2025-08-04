@@ -44,6 +44,8 @@ import re
 def _htmlExponent(x):
     return "<sup>" + str(int(x)) + "</sup>"
 
+
+
 def texUnits(s):
     """Reformat ascii number as TeX
 
@@ -61,6 +63,10 @@ def texUnits(s):
     split[1::2] = ["^{"+e+"}" if len(e) > 0 else '' for e in split[1::2]]
     return ''.join(split)
 
+
+
+
+
 def unicodeUnits(s):
     """Reformat ascii number as unicode
 
@@ -76,6 +82,10 @@ def unicodeUnits(s):
     split = re.split("\^\{([-0-9]+)\}",s)
     split[1::2] = [_htmlExponent(e) for e in split[1::2]]
     return ''.join(split)
+
+
+
+
 
 def numToStr(val, unit=None, scale=1, n=3, smallest_exp=0):
     """Pretty print a number
@@ -131,6 +141,10 @@ def numToStr(val, unit=None, scale=1, n=3, smallest_exp=0):
 
     return s
 
+
+
+
+
 def toHex(c):
     """RGB triple to hex string
 
@@ -143,6 +157,10 @@ def toHex(c):
             HTML RGB hex code.
     """
     return "#{:02x}{:02x}{:02x}".format(*map(lambda x: int(255*x), c))
+
+
+
+
 
 
 
@@ -179,6 +197,10 @@ def colorWheel(h):
     else:
         c = (v, p, q)
     return c
+
+
+
+
 
 def texfmt(xx,n=3,tex_escape=False,smallest_exp=3):
   """
@@ -225,6 +247,10 @@ def texfmt(xx,n=3,tex_escape=False,smallest_exp=3):
     return s
 
 
+
+
+
+
 def sanitizeTex(st):
     """ Replace control characters with escaped versions
 
@@ -246,4 +272,3 @@ def sanitizeTex(st):
     s = s.replace('~', r'\textasciitilde{}')
     s = s.replace('^', r'\textasciicircum{}')
     return s
-

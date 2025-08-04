@@ -113,6 +113,8 @@ def _siteTypeImg(siteLattice, siteColors, axis0, axis1, axis2,  planeIndex):
     img.save(imgFile,'PNG')
     return base64.b64encode(imgFile.getvalue()).decode()
 
+
+
 class FileJupyterMixin:
     def _speciesJ2context(self, sps, cs): 
         ctx = super()._speciesJ2context(sps,cs)
@@ -184,6 +186,10 @@ class FileJupyterMixin:
                                           latticeEvals=nlt, speciesEvals=nsp, startCt=ct0, endCt=ct1))
         
         return ctx
+
+
+
+
 
 
 
@@ -456,6 +462,8 @@ class JupyterDisplayMixin:
 
     #### Model builder context manager
 
+
+
     def construct(sim):
         """Track newly created model objects and display in Notebook.
 
@@ -528,7 +536,11 @@ class JupyterDisplayMixin:
         return InteractiveConstruct()
 
 
+
+
     #### Site lattice viewer
+
+
 
     @_maybeJupyter
     def displayGeometry(self, filterFunctions=None, mode="widget"):
@@ -573,6 +585,10 @@ class JupyterDisplayMixin:
         else:
             raise ValueError("mode should be {widget, download_x3d, download_html}")
 
+
+
+
+
     @_maybeJupyter
     def showRegion(self,  plane="xz", planeIndex=None):
         """Display a slice of the site lattice
@@ -585,6 +601,10 @@ class JupyterDisplayMixin:
         """
         ctx = self._regionJ2context(plane, planeIndex)
         return Tmp.displayj2html("region.html", ctx)
+
+
+
+
 
     @_maybeJupyter
     def showRegionStack(self, plane='xz', scl=None, maxWidth=600, maxHeight=600):
@@ -605,22 +625,36 @@ class JupyterDisplayMixin:
         htmlNames=[r._html() for r in self.regionList]
         return _showRegionStack(self.siteLattice, htmlNames, siteColors, plane=plane, scl=scl, maxWidth=maxWidth, maxHeight=maxHeight)
 
+
+
     # Model introspection
+
+
 
     @_maybeJupyter
     def showAllParameters(self):
         """Display a table of reaction rates and diffusion constants"""
         return self._paramTable(self, "All defined parameters", list(self.rxnRateList)+list(self.diffRateList))
 
+
+
+
+
     @_maybeJupyter
     def showRateConstants(self):
         """Display a table of reaction rates"""
         return self._paramTable(self, "Reaction rate constants", self.rxnRateList)
 
+
+
+
+
     @_maybeJupyter
     def showDiffusionConstants(self):
         """Display a table of diffusion constants"""
         return self._paramTable(self, "Diffusion constants", self.diffRateList)
+
+
 
     def _paramTable(self, title, params):
         ctx = dict(title=title, count=len(params), params=[])
@@ -654,6 +688,8 @@ class JupyterDisplayMixin:
         return Tmp.displayj2html("params.html", ctx)
 
 
+
+
     @_maybeJupyter
     def showSpecies(self,sps):
         """Show details on a species type"""
@@ -666,6 +702,10 @@ class JupyterDisplayMixin:
         return Tmp.displayj2html("species.html", self._speciesJ2context(sps,cs))
 
 
+
+
+
+
     @_maybeJupyter
     def showAllSpecies(self):
         """Inspect all species interactively"""
@@ -676,11 +716,18 @@ class JupyterDisplayMixin:
 
         return Tmp.displayj2html("allSpecies.html", topctx)
 
+
+
+
+
     @_maybeJupyter
     def showReactions(self, rxnList=None):
         """Display a table of all reactions"""
         ctx = self._reactionJ2context(rxnList or self.reactionList)
         return Tmp.displayj2html("reactionTable.html", ctx)
+
+
+
 
 
 
@@ -802,6 +849,8 @@ def _showBinaryLattices(binLattices,manualColor=None, filterFunctions=None, mode
         return _downloadFile(data.encode("ascii"), "lattice-3dView.html")
 
 
+
+
 def showVolumeStack(vol, plane='xz', cmap='inferno', scl=None, maxWidth=600, maxHeight=600):
     """Display slices volumetric data interactively
 
@@ -875,6 +924,8 @@ def showVolumeStack(vol, plane='xz', cmap='inferno', scl=None, maxWidth=600, max
 
     ctx['pngData'] = '[' + ','.join('"'+x+'"' for x in pngData) + ']'
     return Tmp.displayj2html("datastack.html", ctx)
+
+
 
 
 class _Report:

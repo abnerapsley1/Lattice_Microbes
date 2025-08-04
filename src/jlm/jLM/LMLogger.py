@@ -1,6 +1,6 @@
 # 
 # University of Illinois Open Source License
-# Copyright 2016-2018 Luthey-Schulten Group,
+# Copyright 2008-2018 Luthey-Schulten Group,
 # All rights reserved.
 # 
 # Developed by: Luthey-Schulten Group
@@ -34,55 +34,76 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 # OTHER DEALINGS WITH THE SOFTWARE.
 # 
-# Author(s): Tyler M. Earnest
+# Author(s): Michael J. Hallock and Joseph R. Peterson
 # 
+#
 
-"""Templating engine tools"""
+import logging
 
-import os.path
+# Create the default LM Logger
+LMLogger = logging.getLogger('LMLogger')
+
+# Gracefully catch logging.NullHandler() not existing in python 2.6
 try:
-    import jinja2
-    _j2 = jinja2.Environment(trim_blocks=True, 
-                             lstrip_blocks=True,
-                             loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__),"templates")))
-except ImportError:
-    _j2 = None
+	nullHandlerLM = logging.NullHandler()
+except AttributeError:
+	class NullHandler(logging.Handler):
+		def emit(self, record):
+			pass
+	nullHandlerLM = NullHandler()
 
+LMLogger.addHandler(nullHandlerLM) # Set the library to initially print to nothing
 
-
-def j2render(fname, ctx):
-    """Renders a template given a context dictionary
-
-    Args:
-        fname (str):
-            template file in the "templates" directory
-        ctx (dict):
-            context dictionary
-
-    Returns:
-        str: Rendered template
-    """
-    if _j2:
-        return _j2.get_template(fname).render(ctx)
-    else:
-        raise ImportError("Deferred jinja2 import exception")
+# Set up the formatter
+LMformatter = logging.Formatter('%(asctime)s: %(levelname)s: %(message)s')
+nullHandlerLM.setFormatter(LMformatter)
 
 
 
 
 
-def displayj2html(fname, ctx):
-    """Renders an HTML template and displays in Jupyter notebook
+def setLMLoggerLevel(level):
+	"""Set the level of the logger for the application
 
     Args:
-        fname (str):
-            template file in the "templates" directory
-        ctx (dict):
-            context dictionary
+        level:
+            The level the logger should report (e.g. logger.WARNING, logger.INFO, etc.)
     """
-    import IPython.display as ipd
-    if _j2:
-        return ipd.HTML(j2render(fname, ctx))
-    else:
-        raise ImportError("Deferred jinja2 import exception")
+	LMLogger.setLevel(level)
+
+
+
+
+
+def setLMLogFile(filename, level=logging.DEBUG):
+	"""Set up file handler to print log to file
+
+    Args:
+        filename:
+            The name of the file to log information
+        level:
+            The level of information to log
+    """
+	fileH = logging.FileHandler(filename, mode='w')
+	fileH.setLevel(level)
+	fileH.setFormatter(LMformatter)
+	LMLogger.removeHandler(nullHandlerLM)
+	LMLogger.addHandler(fileH)
+
+
+
+
+
+def setLMLogConsole(level=logging.DEBUG):
+	"""Set the logger to write to the console as the code is working
+
+    Args:
+        level:
+            The level of information to log
+    """
+	consoleH = logging.StreamHandler() # Defaults to sys.stderr
+	consoleH.setLevel(level)
+	consoleH.setFormatter(LMformatter)
+	LMLogger.removeHandler(nullHandlerLM)
+	LMLogger.addHandler(consoleH)
 

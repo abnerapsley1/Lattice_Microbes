@@ -85,6 +85,7 @@ try:
 except ImportError:
     pass
 
+
 def printCompiledOptions():
     import lm
     print(lm.BUILD_CONFIGURATION)

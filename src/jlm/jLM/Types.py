@@ -45,6 +45,8 @@ import numpy as np
 def _rmTex(x):
     return r"\mathrm{" + x.replace("_", r"\_") + "}"
 
+
+
 class Species(BT.SimObj):
     """Chemical species"""
     @classmethod
@@ -57,11 +59,20 @@ class Species(BT.SimObj):
     def _html(self):
         return "<span class='jLMnum'>"+ self.name + "</span>"
 
+
+
     def show(self):
         return self._sim.showSpecies(self)
 
+
+
+
+
+
 class BuilderSpecies(Species):
     """Chemical species, in the context of simulation construction"""
+
+
     def placeParticle(self, x, y, z, count):
         """Place in a subvolume.
         
@@ -78,6 +89,10 @@ class BuilderSpecies(Species):
         self._sim.placeNumber(self, x, y, z, count)
         return self
 
+
+
+
+
     def placeNumberInto(self, region, count):
         """Distribute a number within a region
         
@@ -90,6 +105,10 @@ class BuilderSpecies(Species):
         self._sim.distributeNumber(self, region, count)
         return self
 
+
+
+
+
     def placeConcentrationInto(self, region, conc):
         """Distribute a concentration within a region
         
@@ -101,6 +120,10 @@ class BuilderSpecies(Species):
         """
         self._sim.distributeConcentration(self, region, conc)
         return self
+
+
+
+
 
     def diffusionRate(self, region, rate, value=None):
         """Set the diffusion rate
@@ -116,6 +139,10 @@ class BuilderSpecies(Species):
         """
         self._sim.transitionRate(self, region, region, rate, value=value)
         return self
+
+
+
+
 
     def transitionRate(self, regionFrom, regionTo, rate, value=None):
         """Set the diffusion rate
@@ -135,32 +162,56 @@ class BuilderSpecies(Species):
         return self
 
 
+
+
+
+
+
 class TrajSpecies(Species):
     """Chemical species, in the context of trajectory analysis"""
+
+
     def getNumberTrajectory(self, **kwargs):
         """Get particle number trajectory for this species
 
         See :py:meth:`~jLM.RDME.File.getNumberTrajectory`
         """
         return self._sim.getNumberTrajectory(species=self, **kwargs)
+
+
+
+
     def getLatticeTrajectory(self, **kwargs):
         """Get lattice trajectory for this species
 
         See :py:meth:`~jLM.RDME.File.getLatticeTrajectory`
         """
         return self._sim.getLatticeTrajectory(species=self, **kwargs)
+
+
+
+
     def getLatticeHistogram(self, **kwargs):
         """Get lattice histogram for this species
 
         See :py:meth:`~jLM.RDME.File.getLatticeHistogram`
         """
         return self._sim.getLatticeHistogram(species=self, **kwargs)
+
+
+
+
     def getNumberTrajectoryFromRegion(self, **kwargs):
         """Get number trajectory for a region spec for this species
 
         See :py:meth:`~jLM.RDME.File.getNumberTrajectoryFromRegion`
         """
         return self._sim.getNumberTrajectoryFromRegion(species=self, **kwargs)
+
+
+
+
+
 
 
 class Region(BT.SimObj):
@@ -195,8 +246,14 @@ class Region(BT.SimObj):
     def _TeX(self):
        return r"\texttt{" + self.name.replace("_", r"\textunderscore") + "}"
 
+
+
+
+
 class BuilderRegion(Region):
     """Compartment, in the context of simulation construction"""
+
+
     def diffusionRate(self, rate, value=None):
         """Set diffusion rate for all particles
 
@@ -209,6 +266,10 @@ class BuilderRegion(Region):
         """
         self._sim.transitionRate(None, self, self, rate, value=value)
         return self
+
+
+
+
 
     def transitionRateOut(self, rate, value=None):
         """Set diffusion rate for all particles leaving this region
@@ -223,6 +284,10 @@ class BuilderRegion(Region):
         self._sim.transitionRate(None, self, None, rate, value=value)
         return self
 
+
+
+
+
     def transitionRateIn(self, rate, value=None):
         """Set diffusion rate for all particles entering this region
 
@@ -236,6 +301,10 @@ class BuilderRegion(Region):
         self._sim.transitionRate(None, None, self, rate, value=value)
         return self
 
+
+
+
+
     def placeSpeciesNumber(self, sps, count):
         """Distribute a number of species
         
@@ -248,6 +317,10 @@ class BuilderRegion(Region):
         self._sim.distributeNumber(sps, self, count)
         return self
 
+
+
+
+
     def placeSpeciesConcentration(self, sps, conc):
         """Distribute a concentration of species
         
@@ -259,6 +332,10 @@ class BuilderRegion(Region):
         """
         self._sim.distributeConcentration(sps, self, conc)
         return self
+
+
+
+
 
     def addReaction(self, *args, **kwargs):
         """Add a reaction to this region
@@ -278,14 +355,26 @@ class BuilderRegion(Region):
         self._sim.assignReaction(reaction, self)
         return self
 
+
+
+
+
+
 class TrajRegion(Region):
     """Compartment, in the context of trajectory analysis"""
+
+
     def getNumberTrajectoryFromRegion(self, **kwargs):
         """Get number trajectory a species spec for this region
 
         See :py:meth:`~jLM.RDME.File.getNumberTrajectoryFromRegion`
         """
         return self._sim.getNumberTrajectoryFromRegion(self, region=self)
+
+
+
+
+
 
 class DiffusionConst(BT.SimObj):
     """Diffusion constant"""
@@ -302,6 +391,10 @@ class DiffusionConst(BT.SimObj):
 
     def _TeX(self):
        return "D_{" + _rmTex(self.name) + "}"
+
+
+
+
 
 
 class RateConst(BT.SimObj):
@@ -337,7 +430,11 @@ class RateConst(BT.SimObj):
         # XXX For some reason the rates are scaled by Nsites^(order-1) in 
         #   MpdRdmeSolver::buildDiffusionModel. This corrects for this
         return self.stochasticRate*float(self._sim.siteLattice.size)**self._concPower
+
+
     
+
+
 
 class Reaction(BT.SimObj):
     """Chemical reaction"""
@@ -373,8 +470,14 @@ class Reaction(BT.SimObj):
 
         return side(self.reactants) + r"\overset{" + self.rate._TeXMath() + r"}{\longrightarrow}" + side(self.products)
 
+
+
+
+
 class BuilderReaction(Reaction):
     """Chemical reaction, in the context of simulation construction"""
+
+
     def assignToRegion(self, region):
         """Assign to a region
 

@@ -36,15 +36,21 @@
 # 
 # Author(s): Tyler M. Earnest
 # 
+# adapted from http://stackoverflow.com/a/13781114
+#
 
-"""Defines ColorSeq, the color scheme generator"""
+##############################################
+### Importing Additional Necessary Modules ###
+##############################################
 import colorsys
 import itertools
 import fractions
 
-# adapted from http://stackoverflow.com/a/13781114
-
+###################################
+### Define _coverRange Function ###
+###################################
 def _coverRange():
+    # 
     yield 0
     for n in itertools.count():
         k = fractions.Fraction(1, 2**n)
@@ -56,6 +62,8 @@ def _hsvGen(h):
     for s in [fractions.Fraction(6,10)]: # optionally use range
         for v in [fractions.Fraction(8,10),fractions.Fraction(5,10)]: # could use range too
             yield (h, s, v) # use bias for v here if you use range
+
+
 
 
 class ColorGen:
@@ -90,6 +98,8 @@ class ColorGen:
                 self._fgFloat.append((0.0,0.0,0.0))
 
 
+
+
     def floatFg(self,idx):
         """Get an appropriate foreground color for a color index as a RGB triple
 
@@ -103,6 +113,10 @@ class ColorGen:
         """
         self._get(idx)
         return self._fgFloat[idx]
+
+
+
+
 
     def strFg(self,idx):
         """Get an appropriate foreground color for a color index as a hex string
@@ -118,6 +132,10 @@ class ColorGen:
         self._get(idx)
         return self._fgHex[idx]
 
+
+
+
+
     def float(self,idx):
         """Get a RGB triple by index
 
@@ -132,6 +150,10 @@ class ColorGen:
         self._get(idx)
         return self._bgFloat[idx]
 
+
+
+
+
     def str(self,idx):
         """Get a hex string by index
 
@@ -145,5 +167,8 @@ class ColorGen:
         """
         self._get(idx)
         return self._bgHex[idx]
+
+
+
 
 ColorSeq = ColorGen()

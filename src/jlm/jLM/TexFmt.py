@@ -48,6 +48,8 @@ from . import Template as Tmp
 def _texHeader(net, f):
     print("% {0.name}: ({0.filename}), {1:%Y}-{1:%m}-{1:%d} {1:%H}:{1:%M}:{1:%S}".format(net, datetime.datetime.now()), file=f)
     
+
+
 def regionTable(net, regions=None, file=None):
     """Write a TeX formated table of regions
 
@@ -81,6 +83,10 @@ def regionTable(net, regions=None, file=None):
 
     _texHeader(net,file)
     file.write(Tmp.j2render("regionTable.tex", ctx))
+
+
+
+
 
 
 def parameterTable(net, params=None, file=None):
@@ -130,6 +136,10 @@ def parameterTable(net, params=None, file=None):
     file.write(Tmp.j2render("parameterTable.tex", ctx))
 
 
+
+
+
+
 def reactionTable(net, rxns=None, file=None):
     """Write a TeX formated table of reactions
 
@@ -160,6 +170,10 @@ def reactionTable(net, rxns=None, file=None):
 
     _texHeader(net,file)
     file.write(Tmp.j2render("reactionTable.tex", ctx))
+
+
+
+
 
 
 def modelTables(net, file=None):

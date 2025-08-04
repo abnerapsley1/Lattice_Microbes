@@ -48,6 +48,8 @@ from . import RDME
 from . import JupyterDisplay as JD
 
 
+
+
 class RegionBuilder:
     """Helper object to design site lattice geometry"""
     def __init__(self, net=None, dims=None):
@@ -81,9 +83,13 @@ class RegionBuilder:
         self.center =np.array( [self.nx//2, self.ny//2, self.nz//2])
         self.origin =np.zeros( 3 )
 
+
+
     def emptyLatticeMask(self):
         """Return an empty lattice mask"""
         return np.zeros(self.shape, dtype=bool)
+
+
 
     @staticmethod
     @JD._maybeJupyter
@@ -164,6 +170,8 @@ class RegionBuilder:
 
         return JD._showRegionStack(lattice, htmlNames, siteColors, plane=plane, scl=scl, maxWidth=maxWidth, maxHeight=maxHeight)
 
+
+
     @staticmethod
     def transformGrid(xs, x0, alpha, beta, gamma):
         """Compute the translation/rotation of an index grid
@@ -194,6 +202,8 @@ class RegionBuilder:
         rot = rotZ1 @ rotX @ rotZ0
         return  np.einsum("ijkl,mi->mjkl",xs  - x0[:,np.newaxis,np.newaxis,np.newaxis], rot)
 
+
+
     def _parseArgs(self, angles, center, xs):
         if xs is None:
             xs = self.xs
@@ -206,6 +216,8 @@ class RegionBuilder:
         elif np.isscalar(center):
             raise TypeError("Need center=(x,y,z).")
         return angles, center, xs
+
+
 
     def ellipsoid(self, xs=None, radius=None, angles=None, center=None):
         """Construct ellipsoid mask
@@ -234,6 +246,10 @@ class RegionBuilder:
         xs1 = self.transformGrid(xs,center,*angles)*invRs[:,np.newaxis,np.newaxis,np.newaxis]
         return np.sum(xs1*xs1,axis=0) <= 1
 
+
+
+
+
     def cylinder(self, radius, length, xs=None, angles=None, center=None):
         """Construct cylinder mask
 
@@ -259,6 +275,10 @@ class RegionBuilder:
         m2 = xs1[2,...] <= 0.5*length
         m3 = xs1[2,...] >= -0.5*length
         return m1&m2&m3
+
+
+
+
 
     def spoke(self, x0, length, spoke_radius, r, phi, theta):
         r"""Construct spoke
@@ -300,6 +320,10 @@ class RegionBuilder:
                              angles=[alpha,beta,gamma],
                              center=r*normal + x0)
 
+
+
+
+
     def capsule(self, length, width, xs=None, angles=None, center=None):
         """Construct spherocylinder mask
 
@@ -328,6 +352,10 @@ class RegionBuilder:
                 | self.ellipsoid(radius=r, center=self.origin+hv, xs=xs1) 
                 | self.ellipsoid(radius=r, center=self.origin-hv, xs=xs1))
 
+
+
+
+
     def box(self, lx, ly, lz, xs=None, angles=None, center=None):
         """Construct a rectangular cuboid mask
 
@@ -352,7 +380,11 @@ class RegionBuilder:
         angles, center, xs = self._parseArgs(angles, center, xs)
         xs1 = self.transformGrid(xs,center,*angles)
         return (xs1[0] < lx) & (xs1[0] >= 0) & (xs1[1] < ly) & (xs1[1] >= 0) & (xs1[2] < lz) & (xs1[2] >= 0)
+
+
     
+
+
     def compose(self, *siteSpec, net=None):
         """Compose a series of binary masks into a site lattice
 
@@ -375,6 +407,8 @@ class RegionBuilder:
 
         for (reg, binaryMask) in siteSpec:
             l[binaryMask] = reg.idx
+
+
 
     @classmethod
     def _morphApply(cls, bi, radius, se, fn):
@@ -407,6 +441,8 @@ class RegionBuilder:
         return obi
 
 
+
+
     @staticmethod
     def octoStructElem(r):
         """Iterated 6-connected structuring element
@@ -420,6 +456,8 @@ class RegionBuilder:
                 Structuring element
         """
         return ndi.iterate_structure(ndi.generate_binary_structure(3,1),int(r))
+
+
 
     @property
     def se6(self):
@@ -437,6 +475,8 @@ class RegionBuilder:
         se[...] = True
         return se
 
+
+
     @staticmethod
     def sphereStructElem(r):
         """Spherical structuring element
@@ -452,6 +492,10 @@ class RegionBuilder:
         n = 2*r - 1
         x,y,z = np.mgrid[:n,:n,:n]
         return (x-r+1)**2 + (y-r+1)**2+(z-r+1)**2 < r**2
+
+
+
+
 
     @classmethod
     def dilate(cls, binaryMask, radius=None, se=None):
@@ -471,6 +515,10 @@ class RegionBuilder:
         """
         return cls._morphApply(binaryMask, radius, se, ndi.binary_dilation)
 
+
+
+
+
     @classmethod
     def erode(cls, binaryMask, radius=None, se=None):
         """Morphological erosion of a binary mask
@@ -489,6 +537,10 @@ class RegionBuilder:
                 Eroded lattice
         """
         return cls._morphApply(binaryMask, radius, se, ndi.binary_erosion)
+
+
+
+
 
     @classmethod
     def closing(cls, binaryMask, radius=None, se=None, radius1=None, se1=None):
@@ -516,6 +568,10 @@ class RegionBuilder:
         else:
             return cls._morphApply(binaryMask, radius, se, ndi.binary_closing)
 
+
+
+
+
     @classmethod
     def opening(cls, binaryMask, radius=None, se=None, radius1=None, se1=None):
         """Morphological opening of a binary mask
@@ -542,6 +598,10 @@ class RegionBuilder:
         else:
             return cls._morphApply(binaryMask, radius, se, ndi.binary_opening)
 
+
+
+
+
     @classmethod
     def convexHull(cls, binaryMask):
         """Convex hull of lattice
@@ -562,3 +622,4 @@ class RegionBuilder:
         evalCoords = np.array(np.unravel_index(np.arange(binaryMask.size), binaryMask.shape)).T
         newMaskRavel[...] = triangulation.find_simplex(evalCoords) >= 0
         return newMask
+
