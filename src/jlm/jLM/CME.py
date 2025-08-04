@@ -38,6 +38,13 @@
 #
 # 
 
+""" 
+A module for defining and running stochastic, spatially heterogeneous chemical reaction dynamics.
+
+CME is an acronymn for Chemical Master Equation.
+
+"""
+
 ##############################################
 ### Importing Additional Necessary Modules ###
 ##############################################
