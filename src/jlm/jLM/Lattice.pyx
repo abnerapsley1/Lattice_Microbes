@@ -230,18 +230,33 @@ def latticeHistogram(unsigned char[:,:,:,:] src, int[:] idxs, axes=None, target=
         :py:class:`numpy.ndarray`:
             New ndarray or reference to target
     """
+
+    # Define all the following variables as integers #
     cdef int u,v,dim,histDim
 
+    # Test whether input argument axes in not None and whether the length of input #
+    # argument axes is greater than 0 #
     if axes is not None and len(axes)>0:
+        # Test if length of axes equals 1 #
         if len(axes) == 1:
+            # Define dim as an integer equal to 2 #
             dim = 2
+            # Define dims as a list of [0,1,2] #
             dims = [0,1,2]
+            # Define u as the remainder of dividing axes[0] + 1 #
             u = dims[(axes[0]+1)%3]
+            # Define u as the remainder of dividing axes[0] + 1 #
             v = dims[(axes[0]+2)%3]
+            # Define histDim as the entry for axes[0] #
             histDim = int(axes[0])
+            # Define targetShape as a list of the dimensionality of src #
+            # across the axes defined by u and v #
             targetShape = (src.shape[u],src.shape[v])
+        # Test whether input argument axes length is equal to 2 #
         elif len(axes) == 2:
+            # Define dim as an integer equal to 1 #
             dim = 1
+            # 
             u = next(iter(set([0,1,2])-set(axes)))
             histDim = int(u)
             targetShape = (src.shape[u],)
