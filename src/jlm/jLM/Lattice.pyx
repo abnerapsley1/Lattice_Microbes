@@ -256,11 +256,15 @@ def latticeHistogram(unsigned char[:,:,:,:] src, int[:] idxs, axes=None, target=
         elif len(axes) == 2:
             # Define dim as an integer equal to 1 #
             dim = 1
-            # 
+            # Define u as (???) #
             u = next(iter(set([0,1,2])-set(axes)))
+            # Define histDim as an integer and equal to u #
             histDim = int(u)
+            # Define targetShape as a tuple with 1 entry equal to the length of the u dimension in src #
             targetShape = (src.shape[u],)
+        # Test if the length of axes equals 3 #
         elif len(axes) == 3:
+            # Define targetShape as a tuple of 
             targetShape = (src.shape[0], src.shape[1], src.shape[2])
             dim = 3
         else:
